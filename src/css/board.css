@@ -1,0 +1,4 @@
+.board-container{
+    display: grid;
+    grid-template-columns: repeat(8, 100px);
+}

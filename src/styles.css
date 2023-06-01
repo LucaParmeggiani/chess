@@ -12,10 +12,21 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --white-tile: white;
+  --black-tile: black;
+
+  --white-piece: white;
+  --black-piece: #ccc;
+}
+
+html, body{
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .main-container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  height: 100vh;
 }

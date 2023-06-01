@@ -36,10 +36,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "resizable": true,
-        "title": "chess",
-        "width": 800,
-        "height": 600
+        "resizable": false,
+        "title": "Chess Parme",
+        "width": 1000,
+        "height": 800
       }
     ]
   }

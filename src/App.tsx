@@ -1,22 +1,17 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
-import "./App.css";
+import Board from "./components/Board";
+import MoveLog from "./components/MoveLog";
+import { initialBoardSet } from "./utils/boardConfig";
 
 function App() {
-  const [msg, setMsg] = useState<String>("");
-
-  const getHelloWorld = async () => {
-    setMsg(await invoke("get_hello_world"));
-  }
-
-  getHelloWorld();
-
   return (
     <div className="main-container">
-      {msg}
+      <Board initialPosition={initialBoardSet}/>
+      <MoveLog/>
     </div>
   );
 }
 
 export default App;
+
+//npm run tauri dev
