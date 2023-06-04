@@ -1,46 +1,72 @@
-import { useState } from "react";
 import "../css/board.css";
-import { TBoard, BoardSet, Color, Piece, moveLog } from "../utils/boardConfig";
-import Tile from "./Tile";
+import { useCallback, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
-
-type BoardProps = {
-    initialPosition: BoardSet
-}
 
 export let legalMoves: Array<number> = [];
 
-const Board = ({initialPosition}: BoardProps) => {
+const piecesMap = new Map([
+    ["p", "pawn"],
+    ["r", "rook"],
+    ["n", "knight"],
+    ["b", "bishop"],
+    ["q", "queen"],
+    ["k", "king"],
+]);
 
-    const [boardPosition, setBoardPosition] = useState<BoardSet>(initialPosition);
+const Board = () => {
+
+    // const [FENBoard, setFENBoard] = useState<string>("8/8/8/4p1K1/2k1P3/8/8/8 w KQkq - 0 1");
+    // const [FENBoard, setFENBoard] = useState<string>("4k2r/6r1/8/8/8/8/3R4/R3K3 w KQkq - 0 1");
+    const [FENBoard, setFENBoard] = useState<string>("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     const [legalMoves, setLegalMoves] = useState<Array<number>>([]);
 
-    const getTileColor = (index: number) : Color => {
-        if (Math.floor(index / 8) % 2 === 0)
-            return index % 2 === 0 ? "black" : "white";
-        else return index % 2 === 0 ? "white" : "black";
+    const isLegalMove = (pos: number): JSX.Element | null => {
+        return legalMoves.includes(pos) ? <div className="legalMove"></div> : null
     }
 
-    const getLegalMoves = async (piece: Piece) => {
-        const board: TBoard = {
-            last_move: moveLog.slice(-1).pop() || null,
-            board_position: boardPosition.filter((pos): pos is Piece => pos.hasOwnProperty('piece'))
-        };
+    const emptyBoard = useCallback((): Array<boolean> => {
+        const res: Array<boolean> = [];
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                res.push((i + j) % 2 !== 0);
+            }
+        }
+        return res;
+    }, [legalMoves]);
 
-        setLegalMoves(await invoke("get_legal_moves", { piece, board }));
+    const fillBoard = useCallback((): Array<JSX.Element> => {
+        const pieces: Array<JSX.Element> = [];
+        FENBoard.split(" ")[0].split("/").forEach((row, i) => {
+            const top = i * 100;
+            let left: number = 0;
+            row.split("").forEach((piece, j) => {
+                if (!isNaN(Number(piece))){
+                    left += Number(piece) * 100;
+                } else {
+                    const isLight: boolean = piece.toUpperCase() === piece;
+                    pieces.push(
+                        <div className="piece" key={piece + i + j} style={{top: `${top}px`, left: `${left}px`}}>
+                            <img src={`${piecesMap.get(piece.toLowerCase())}${isLight ? "white" : "black"}.svg`}/>
+                        </div>
+                    );
+                    left += 100;
+                }
+            })
+        })
+        return pieces;
+    }, [FENBoard]);
+
+    const getLegalMoves = async () => {
+        setLegalMoves(await invoke("get_legal_moves", {}));
     }
 
     return (
         <div className="board-container">
-            {boardPosition.map((tilePiece, index) => {
-                return <Tile
-                    tileColor={getTileColor(index)}
-                    piece={tilePiece}
-                    key={index}
-                    getLegalMoves={getLegalMoves}
-                    legalMove={legalMoves.includes(index)}
-                    />
-            })}
+            {
+                emptyBoard().map((isLight: boolean, i: number) => {
+                    return <div className="tile" style={{backgroundColor: isLight ? "#F0D1BA" : "#9F6E5A"}} key={i}>{ isLegalMove(i) }</div>
+                })
+            }{ fillBoard().map((value: JSX.Element) => { return value; }) }
         </div>
     )
 }

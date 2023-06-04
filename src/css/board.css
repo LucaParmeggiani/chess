@@ -1,4 +1,34 @@
 .board-container{
     display: grid;
     grid-template-columns: repeat(8, 100px);
+    position: relative;
+}
+
+.tile{
+    width: 100%;
+    aspect-ratio: 1;
+    position: relative;
+}
+
+.legalMove{
+    position: absolute;
+    width: 50px;
+    aspect-ratio: 1;
+    top: 25%;
+    left: 25%;
+    z-index: 1;
+    background-color: #f400004f;
+    border-radius: 50%;
+}
+
+.piece{
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 100px;
+    aspect-ratio: 1;
+}
+
+.piece img{
+    height: 80px;
 }

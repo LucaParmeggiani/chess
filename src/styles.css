@@ -30,3 +30,17 @@ html, body{
   grid-template-columns: 4fr 1fr;
   height: 100vh;
 }
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F0D1BA;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9F6E5A;
+  border-radius: 10px;
+}

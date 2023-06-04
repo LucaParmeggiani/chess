@@ -1,13 +1,15 @@
-import { invoke } from "@tauri-apps/api/tauri";
+import { useState } from "react";
 import Board from "./components/Board";
 import MoveLog from "./components/MoveLog";
-import { initialBoardSet } from "./utils/boardConfig";
 
 function App() {
+
+  const [moveLogs, setMoveLogs] = useState<Array<string>>([]);
+
   return (
     <div className="main-container">
-      <Board initialPosition={initialBoardSet}/>
-      <MoveLog/>
+      <Board/>
+      <MoveLog moveLog={moveLogs}/>
     </div>
   );
 }
