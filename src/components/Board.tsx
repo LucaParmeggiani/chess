@@ -45,7 +45,7 @@ const Board = () => {
                 } else {
                     const isLight: boolean = piece.toUpperCase() === piece;
                     pieces.push(
-                        <div className="piece" key={piece + i + j} style={{top: `${top}px`, left: `${left}px`}}>
+                        <div className="piece" key={piece + i + j} style={{top: `${top}px`, left: `${left}px`}} onClick={() => getLegalMoves(piece, i, j)}>
                             <img src={`${piecesMap.get(piece.toLowerCase())}${isLight ? "white" : "black"}.svg`}/>
                         </div>
                     );
@@ -56,8 +56,8 @@ const Board = () => {
         return pieces;
     }, [FENBoard]);
 
-    const getLegalMoves = async () => {
-        setLegalMoves(await invoke("get_legal_moves", {}));
+    const getLegalMoves = async (piece: string, i: number, j: number) => {
+        setLegalMoves(await invoke("get_legal_moves", {piece, i, j, FENBoard}));
     }
 
     return (
